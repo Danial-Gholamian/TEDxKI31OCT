@@ -788,6 +788,20 @@ h1:focus {
   }
 }
 
+/* After the animation has played once, Home opens on the finished picture */
+.hero.is-played {
+  height: auto;
+}
+
+.hero.is-played .hero__pin {
+  position: relative;
+  top: 0;
+}
+
+.hero.is-played .hero__cue {
+  display: none;
+}
+
 /* Portrait screens: text above, the whole picture full width below */
 @media (max-aspect-ratio: 1 / 1) {
   .hero__pin {
@@ -1195,7 +1209,7 @@ h1:focus {
 
 .person-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   gap: 1rem;
   align-items: center;
   padding-block: 1rem;
