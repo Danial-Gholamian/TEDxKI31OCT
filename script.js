@@ -1,4 +1,5 @@
-const CONTACT_EMAIL = 'executiveteam@tedxki.com';
+// TEMP TEST: personal inbox. Should be restored to 'executiveteam@tedxki.com' before publishing.
+const CONTACT_EMAIL = 'd.gholamian@yahoo.com';
 const FORM_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 
 const EVENTS = [
@@ -1387,6 +1388,7 @@ async function submitForm(event, form) {
   button.disabled = true;
   setStatus(form, 'info', 'Sending…');
 
+  let reason = '';
   try {
     const response = await fetch(FORM_ENDPOINT, {
       method: 'POST',
@@ -1394,11 +1396,15 @@ async function submitForm(event, form) {
       body: JSON.stringify({ ...data, _subject: subject, _template: 'table', _captcha: 'false' }),
     });
     const result = await response.json().catch(() => ({}));
-    if (!response.ok || String(result.success) !== 'true') throw new Error('Not sent');
+    if (!response.ok || String(result.success) !== 'true') {
+      reason = result.message || `HTTP ${response.status}`;
+      throw new Error(reason);
+    }
 
     form.reset();
     setStatus(form, 'success', 'Thank you! Your message has been sent. We usually reply within a few days.');
   } catch (error) {
+    console.warn('Form not sent:', reason || error.message);
     setStatus(form, 'error', [
       'We could not send your message right now. ',
       el('a', { class: 'text-link', href: mailtoFallback(data, subject) }, 'Send it by email instead'),
